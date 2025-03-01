@@ -22,6 +22,8 @@ public class ModuleDto {
     private int niveau_id;
     private String niveau_alias;
 
+    private int X,Y;
+
 
     public static ModuleDto toDto(Module module) {
         return ModuleDto.builder()
@@ -33,6 +35,7 @@ public class ModuleDto {
                 .filiere_intitule(module.getFiliere().getIntitule())
                 .niveau_id(module.getNiveau().getId())
                 .niveau_alias(module.getNiveau().getAlias())
+
                 .build();
     }
 }

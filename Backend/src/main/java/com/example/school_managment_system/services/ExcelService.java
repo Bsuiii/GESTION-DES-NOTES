@@ -3,8 +3,10 @@ package com.example.school_managment_system.services;
 import com.example.school_managment_system.dto.EtudiantDto;
 import com.example.school_managment_system.dto.InscriptionCheckObject;
 import com.example.school_managment_system.dto.InscriptionDto;
+import com.example.school_managment_system.models.Element;
 import com.example.school_managment_system.models.Etudiant;
 import com.example.school_managment_system.models.Inscription;
+import com.example.school_managment_system.models.Module;
 import com.example.school_managment_system.models.Niveau;
 import com.example.school_managment_system.repositories.EtudiantRepository;
 import com.example.school_managment_system.repositories.InscriptionRepository;
@@ -16,10 +18,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ExcelService {
@@ -33,11 +37,14 @@ public class ExcelService {
     @Autowired
     private InscriptionService inscriptionService;
 
+
+
     public ExcelService(EtudiantRepository etudiantRepository, NiveauRepository niveauRepository, InscriptionRepository inscriptionRepository) {
         this.etudiantRepository = etudiantRepository;
         this.niveauRepository = niveauRepository;
         this.inscriptionRepository = inscriptionRepository;
     }
+
 
     @Transactional
     public List<InscriptionCheckObject> processExcelFile(MultipartFile file) throws Exception {
@@ -183,5 +190,66 @@ public class ExcelService {
         Optional<Integer> nextNiveauIdOpt = niveauRepository.findNiveauSuivantId(lastNiveauId);
 
         return (nextNiveauIdOpt.get() == niveauId);
+    }
+
+
+
+
+
+
+    public void generateGradesExcelForModule(Module module, List<Etudiant> students, List<Element> elements, double thresholdX, double thresholdY, String filePath) throws IOException {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Grades");
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("CNE");
+        headerRow.createCell(1).setCellValue("Nom");
+        headerRow.createCell(2).setCellValue("Prénom");
+
+        int colIndex = 3;
+        for (Element element : elements) {
+            headerRow.createCell(colIndex).setCellValue(element.getTitre() + " (" + element.getCode() + ")");
+            colIndex++;
+        }
+
+        headerRow.createCell(colIndex).setCellValue("Moyenne");
+        headerRow.createCell(colIndex + 1).setCellValue("Validation");
+
+        // Populate student data
+        int rowIndex = 1;
+        for (Etudiant student : students) {
+            Row row = sheet.createRow(rowIndex);
+            row.createCell(0).setCellValue(student.getCne());
+            row.createCell(1).setCellValue(student.getNom());
+            row.createCell(2).setCellValue(student.getPrenom());
+
+            // Add empty cells for grades
+            for (int i = 3; i < 3 + elements.size(); i++) {
+                row.createCell(i);
+            }
+
+            // Add formula for average
+            String averageFormula = "AVERAGE(D" + (rowIndex + 1) + ":" + (char) ('C' + elements.size()) + (rowIndex + 1) + ")";
+            row.createCell(3 + elements.size()).setCellFormula(averageFormula);
+
+            // Add formula for validation
+            String validationFormula = "IF(" + (char) ('D' + elements.size()) + (rowIndex + 1) + ">=" + thresholdX + ", \"V\", IF(" + (char) ('D' + elements.size()) + (rowIndex + 1) + ">=" + thresholdY + ", \"R\", \"NV\"))";
+            row.createCell(4 + elements.size()).setCellFormula(validationFormula);
+
+            rowIndex++;
+        }
+
+        // Auto-size columns
+        for (int i = 0; i < 4 + elements.size(); i++) {
+            sheet.autoSizeColumn(i);
+        }
+
+        // Write the file
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+        }
+
+        workbook.close();
     }
 }

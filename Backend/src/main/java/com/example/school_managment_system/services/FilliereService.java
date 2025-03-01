@@ -1,6 +1,7 @@
 package com.example.school_managment_system.services;
 
 import com.example.school_managment_system.dto.FiliereDto;
+import com.example.school_managment_system.dto.InscriptionDto;
 import com.example.school_managment_system.exceptions.ResourceAlreadyExistsException;
 import com.example.school_managment_system.exceptions.ResourceNotFoundException;
 import com.example.school_managment_system.models.Enseignant;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FilliereService {
@@ -19,8 +21,11 @@ public class FilliereService {
     private FiliereRepository filiereRepository;
 
     // Get all filieres
-    public List<Filiere> getAllFilieres() {
-        return filiereRepository.findAll();
+    public List<FiliereDto> getAllFilieres() {
+        return filiereRepository.findAll()
+                .stream()
+                .map(FiliereDto::toDto)
+                .collect(Collectors.toList());
     }
 
     // Get filiere by ID

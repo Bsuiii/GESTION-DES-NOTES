@@ -1,5 +1,6 @@
 package com.example.school_managment_system.models;
 
+import com.example.school_managment_system.utils.Semester;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,4 +39,9 @@ public class Module {
 
     @OneToMany(mappedBy = "module", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Note> notes;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Semester semestre;
+
+
 }

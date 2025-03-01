@@ -31,4 +31,6 @@ public class Filiere {
 
     @OneToMany(mappedBy = "filiere", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Module> modules;
+
+    private int X,Y;
 }

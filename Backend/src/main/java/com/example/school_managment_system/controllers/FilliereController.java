@@ -27,7 +27,7 @@ public class FilliereController {
 
     // Get all filieres
     @GetMapping
-    public ResponseEntity<List<Filiere>> getAllFilieres(@RequestHeader("Authorization") String jwt) throws Exception {
+    public ResponseEntity<List<FiliereDto>> getAllFilieres(@RequestHeader("Authorization") String jwt) throws Exception {
         return new ResponseEntity<>(filiereService.getAllFilieres(), jwtUtil.checkTheJWT(jwt), HttpStatus.OK);
     }
 
@@ -37,7 +37,7 @@ public class FilliereController {
         try {
             Filiere filiere = filiereService.getFiliereById(id)
                     .orElseThrow(() -> new ResourceNotFoundException("Filiere not found with id " + id));
-            return new ResponseEntity<>(filiere, jwtUtil.checkTheJWT(jwt), HttpStatus.OK);
+            return new ResponseEntity<>(FiliereDto.toDto(filiere), jwtUtil.checkTheJWT(jwt), HttpStatus.OK);
         } catch (ResourceNotFoundException ex) {
             return new ResponseEntity<>(ex.getMessage(), jwtUtil.checkTheJWT(jwt), HttpStatus.NOT_FOUND);
         }
