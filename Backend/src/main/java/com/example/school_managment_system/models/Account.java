@@ -24,7 +24,7 @@ public class Account {
     private String password;
     private boolean is_active;
     private boolean is_locked;
-
+    private int otpToken;
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
   //  @JsonIgnore

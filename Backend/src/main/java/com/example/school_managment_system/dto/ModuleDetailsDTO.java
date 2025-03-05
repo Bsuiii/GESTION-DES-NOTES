@@ -25,6 +25,7 @@ public class ModuleDetailsDTO {
     @Data
     @Builder
     public static class StudentDetailsDTO {
+        private int id;
         private String nom;
         private String prenom;
         private String cne;

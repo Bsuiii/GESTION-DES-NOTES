@@ -15,4 +15,6 @@ public interface ElementRepository extends JpaRepository<Element,Integer> {
     Optional<Element> findByCode(String code);
 
     List<Element> findByModule(Module module);
+
+    Optional<Element> findByTitreAndModuleId(String titre, int moduleId);
 }

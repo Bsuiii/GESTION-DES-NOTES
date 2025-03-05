@@ -33,5 +33,5 @@ public class Niveau {
     private List<Module> modules;
 
     @OneToMany(mappedBy = "niveau", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Inscription> inscriptions; // Renamed
+    private List<Inscription> inscriptions;
 }
