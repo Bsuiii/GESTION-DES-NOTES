@@ -1,20 +1,18 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  Button,
-  Card,
-  CardHeader,
-  CardBody,
-  FormGroup,
-  Form,
-  Input,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroup,
-  Row,
+import { 
+  Button, 
+  Card, 
+  CardBody, 
+  FormGroup, 
+  Form, 
+  Input, 
+  Row, 
   Col,
+  Container 
 } from "reactstrap";
-import authService from "../../services/authService"; // Adjust the path to your authService
+import authService from "../../services/authService";
+import loginImage from "../../assets/img/theme/gestion-de-notes-de-frais-avec-le-logiciel-ebrigade-scaled.jpg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,226 +22,135 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
     try {
-      // Call the login function from authService
-      const userDetails = await authService.login(email, password);
-
-      // Redirect to a protected route (e.g., /dashboard)
+      await authService.login(email, password);
       navigate("/dashboard");
     } catch (err) {
-      setError("Invalid email or password"); // Display error message
-      console.error("Login failed:", err);
+      setError("Invalid email or password");
     }
   };
 
   return (
-    <>
-      <Col lg="12" md="20" style={{ marginTop: "130px" }}>
-        {/* Main Card */}
-        <Card
-          style={{
-            border: "none",
-            borderRadius: "20px",
-            boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
-            background: "rgba(255, 255, 255, 0.9)",
-            backdropFilter: "blur(10px)",
-            overflow: "hidden",
-          }}
-        >
-          {/* Card Header */}
-          <CardHeader
-            style={{
-              backgroundColor: "transparent",
-              borderBottom: "none",
-              padding: "2rem 1rem 1rem",
-              textAlign: "center",
-            }}
-          >
-            <h1
-              style={{
-                fontSize: "2.5rem",
-                fontWeight: "bold",
-                color: "#4a90e2",
-                marginBottom: "0.5rem",
-              }}
-            >
-              Welcome Back!
-            </h1>
-            <p style={{ color: "#6c757d", fontSize: "0.9rem" }}>
-              Sign in to continue to your account.
-            </p>
-          </CardHeader>
-
-          {/* Card Body */}
-          <CardBody style={{ padding: "2rem" }}>
-            {/* Form */}
-            <Form role="form" onSubmit={handleLogin}>
-              {/* Email Field */}
-              <FormGroup style={{ marginBottom: "1.5rem" }}>
-                <InputGroup
-                  style={{
-                    borderRadius: "10px",
-                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText
-                      style={{
-                        backgroundColor: "#ffffff",
-                        border: "none",
-                        padding: "0.75rem",
-                      }}
-                    >
-                      <i
-                        className="ni ni-single-02"
-                        style={{ color: "#4a90e2" }}
-                      />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Email"
-                    type="text" // Use type="text" instead of type="email"
-                    autoComplete="username"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    style={{
-                      border: "none",
-                      borderRadius: "10px",
-                      padding: "0.75rem",
-                    }}
-                  />
-                </InputGroup>
-              </FormGroup>
-
-              {/* Password Field */}
-              <FormGroup style={{ marginBottom: "1.5rem" }}>
-                <InputGroup
-                  style={{
-                    borderRadius: "10px",
-                    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  <InputGroupAddon addonType="prepend">
-                    <InputGroupText
-                      style={{
-                        backgroundColor: "#ffffff",
-                        border: "none",
-                        padding: "0.75rem",
-                      }}
-                    >
-                      <i
-                        className="ni ni-lock-circle-open"
-                        style={{ color: "#4a90e2" }}
-                      />
-                    </InputGroupText>
-                  </InputGroupAddon>
-                  <Input
-                    placeholder="Password"
-                    type="password"
-                    autoComplete="current-password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    style={{
-                      border: "none",
-                      borderRadius: "10px",
-                      padding: "0.75rem",
-                    }}
-                  />
-                </InputGroup>
-              </FormGroup>
-
-              {/* Error Message */}
-              {error && (
-                <div
-                  style={{
-                    color: "red",
-                    textAlign: "center",
-                    marginBottom: "1rem",
-                  }}
-                >
-                  {error}
-                </div>
-              )}
-
-              {/* Remember Me Checkbox */}
-              <div
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "1.5rem",
-                }}
-              >
-                <input
-                  type="checkbox"
-                  id="customCheckLogin"
-                  style={{ marginRight: "0.5rem" }}
-                />
-                <label
-                  htmlFor="customCheckLogin"
-                  style={{ color: "#6c757d", fontSize: "0.875rem" }}
-                >
-                  Remember me
-                </label>
-              </div>
-
-              {/* Login Button */}
-              <div style={{ textAlign: "center" }}>
-                <Button
-                  style={{
-                    width: "100%",
-                    backgroundColor: "#4a90e2",
-                    border: "none",
-                    borderRadius: "10px",
-                    padding: "0.75rem",
-                    fontSize: "1rem",
-                    fontWeight: "bold",
-                    color: "#ffffff",
-                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                    transition: "all 0.3s ease",
-                  }}
-                  type="submit"
-                  onMouseEnter={(e) => {
-                    e.target.style.backgroundColor = "#357ABD";
-                    e.target.style.transform = "translateY(-2px)";
-                  }}
-                  onMouseLeave={(e) => {
-                    e.target.style.backgroundColor = "#4a90e2";
-                    e.target.style.transform = "translateY(0)";
-                  }}
-                >
-                  Sign in
-                </Button>
-              </div>
-            </Form>
-          </CardBody>
-
-          {/* Link to Register Page */}
-          <Row style={{ marginTop: "1rem", marginBottom: "2rem" }}>
-            <Col
-              style={{
-                textAlign: "center",
+    <div style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "#f8f9fa",
+      padding: "20px 0",
+      minHeight: "calc(100vh - 56px)"
+    }}>
+      <Container className="py-0">
+        <Row className="justify-content-center">
+          <Col md="11" className="p-0">
+            <Card style={{
+              display: "flex",
+              flexDirection: "row",
+              border: "none",
+              overflow: "hidden",
+              boxShadow: "0 4px 20px rgba(0, 0, 0, 0.1)"
+            }}>
+              {/* Image Section */}
+              <div className="d-none d-md-block" style={{
+                flex: 1,
+                backgroundImage: `url(${loginImage})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+                minHeight: "500px",
                 display: "flex",
-                justifyContent: "center",
-              }}
-              xs="12"
-            >
-              <Link
-                to="/auth/register"
-                style={{
-                  color: "#4a90e2",
-                  textDecoration: "none",
-                  fontSize: "0.875rem",
-                  fontWeight: "500",
-                }}
-              >
-                <small>Don't have an account? Create one</small>
-              </Link>
-            </Col>
-          </Row>
-        </Card>
-      </Col>
-    </>
+                alignItems: "flex-end"
+              }}>
+                <div style={{
+                  padding: "2rem",
+                  color: "white",
+                  background: "linear-gradient(transparent, rgba(0,0,0,0.7))",
+                  width: "100%",
+                  height:"100%"
+                }}>
+                  <h3>Grade Management System</h3>
+                  <p>Access your professional workspace</p>
+                </div>
+              </div>
+
+              {/* Login Form Section */}
+              <div style={{
+                flex: 1,
+                padding: "2rem",
+                minHeight: "500px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center"
+              }}>
+                <CardBody className="p-0">
+                  {/* University Logo */}
+                  <div className="text-center mb-4">
+                    <img
+                      src={require("../../assets/img/brand/université-Ibn-Tofail-de-Kénitra.png")}
+                      alt="University Logo"
+                      style={{
+                        maxHeight: "80px",
+                        width: "auto",
+                        marginBottom: "1rem"
+                      }}
+                    />
+                  </div>
+                  <Form onSubmit={handleLogin}>
+                    <FormGroup>
+                      <label htmlFor="email" className="form-label">Email or phone</label>
+                      <Input
+                        id="email"
+                        type="text"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        style={{ borderRadius: "8px", padding: "12px" }}
+                      />
+                    </FormGroup>
+
+                    <FormGroup>
+                      <div className="d-flex justify-content-between">
+                        <label htmlFor="password" className="form-label">Password</label>
+                        <Link to="/auth/forgot-password" style={{ fontSize: "0.875rem" }}>
+                          Forgot password?
+                        </Link>
+                      </div>
+                      <Input
+                        id="password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        style={{ borderRadius: "8px", padding: "12px" }}
+                      />
+                    </FormGroup>
+
+                    {error && <div className="text-danger text-center mb-3">{error}</div>}
+
+                    <Button
+                      color="primary"
+                      block
+                      style={{
+                        borderRadius: "8px",
+                        padding: "12px",
+                        fontWeight: 600,
+                        margin: "1.5rem 0"
+                      }}
+                      type="submit"
+                    >
+                      Sign In
+                    </Button>
+                  </Form>
+
+                  <div className="text-center text-muted my-3">OR</div>
+
+                  <div className="text-center">
+                    <span className="text-muted">Don't have an account? </span>
+                    <Link to="/auth/register" style={{ fontWeight: 600 }}>Register</Link>
+                  </div>
+                </CardBody>
+              </div>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 };
 
