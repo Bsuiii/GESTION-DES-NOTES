@@ -16,10 +16,9 @@ import {
   ModalFooter,
 } from "reactstrap";
 import Header from "components/Headers/Header.js";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import {FaPlus } from "react-icons/fa";
 import { fetchUsers, createUser } from "services/userServices";
-import createAccount from "services/accountServices";
-
+import accountServices from "services/accountServices";
 const Account = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showUserForm, setShowUserForm] = useState(false);
@@ -136,6 +135,10 @@ const Account = () => {
         throw new Error("No user selected for account creation.");
       }
   
+      if (!newUser.role) {
+        throw new Error("Please select a role for the account.");
+      }
+  
       const login = `${selectedPerson.firstname}${selectedPerson.lastname}`.toLowerCase();
       const password = generatePassword();
   
@@ -146,7 +149,9 @@ const Account = () => {
         user_id: selectedPerson.id,
       };
   
-      await createAccount(accountData);
+      console.log("Account Data:", accountData); // Debugging
+  
+      await accountServices.createAccount(accountData);
   
       alert(`Account created successfully!\nLogin: ${login}\nPassword: ${password}`);
   
@@ -222,9 +227,7 @@ const Account = () => {
                         <Button color="success" onClick={() => handleSelectPerson(user)}>
                           Create Account
                         </Button>
-                        <Button color="info" onClick={() => handleEditPerson(user)} className="ml-2">
-                          <FaEdit />
-                        </Button>
+                
                       </td>
                     </tr>
                   ))}
@@ -327,55 +330,6 @@ const Account = () => {
               Create Account
             </Button>
             <Button color="secondary" onClick={() => setShowUserForm(false)}>
-              Cancel
-            </Button>
-          </ModalFooter>
-        </Modal>
-
-        {/* Modal for Editing User Account */}
-        <Modal isOpen={showEditModal} toggle={() => setShowEditModal(false)}>
-          <ModalHeader toggle={() => setShowEditModal(false)}>Edit User Account</ModalHeader>
-          <ModalBody>
-            <Form>
-              <FormGroup>
-                <Label>Role</Label>
-                <Input
-                  type="select"
-                  value={selectedUser?.role || ""}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                >
-                  <option value="ADMIN_SP">ADMIN_SP</option>
-                  <option value="ADMIN_NOTES">ADMIN_NOTES</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label>Account Status</Label>
-                <Input
-                  type="select"
-                  value={selectedUser?.status || "active"}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, status: e.target.value })}
-                >
-                  <option value="active">Active</option>
-                  <option value="disabled">Disabled</option>
-                </Input>
-              </FormGroup>
-              <Button color="warning" onClick={handleResetPassword}>
-                Reset Password
-              </Button>
-              <Button
-                color="danger"
-                onClick={() => handleToggleAccountStatus(selectedUser)}
-                className="ml-2"
-              >
-                {selectedUser?.status === "active" ? "Disable Account" : "Enable Account"}
-              </Button>
-            </Form>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={() => setShowEditModal(false)}>
-              Save Changes
-            </Button>
-            <Button color="secondary" onClick={() => setShowEditModal(false)}>
               Cancel
             </Button>
           </ModalFooter>

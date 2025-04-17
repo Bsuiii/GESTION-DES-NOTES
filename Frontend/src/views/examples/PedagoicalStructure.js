@@ -66,6 +66,7 @@ const PedagogicalStructure = () => {
   const [newModule, setNewModule] = useState({
     titre: "",
     code: "",
+    niveau :"",
     niveau_id: "",
     filiere_id: "",
   });
@@ -155,6 +156,7 @@ const PedagogicalStructure = () => {
       setNewModule({
         titre: "",
         code: "",
+        niveau:"",
         niveau_id: "",
         filiere_id: "",
       });
@@ -286,7 +288,7 @@ const handleDeleteNiveau = async (id) => {
                         <td>{filiere.intitule}</td>
                         <td>{filiere.anneeAccreditation}</td>
                         <td>{filiere.anneeFinAccreditation}</td>
-                        <td>{filiere.coordonnateur.nom+" "+filiere.coordonnateur.prenom}</td>
+                        <td>{filiere.coordonnateur_nomComplet}</td>
                         <td>
                         <Button color="primary" size="sm" onClick={() => handleEditFiliere(filiere)}>
                           Modifier
@@ -360,7 +362,7 @@ const handleDeleteNiveau = async (id) => {
                       <tr key={module.id}>
                         <td>{module.titre}</td>
                         <td>{module.code}</td>
-                        <td>{module.niveau_id}</td>
+                        <td>{module.niveau_alias}</td>
                         <td>{module.filiere_id}</td>
                         <td>
                           <Button color="primary" size="sm">

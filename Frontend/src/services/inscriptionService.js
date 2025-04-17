@@ -9,33 +9,14 @@ const handleResponse = async (response) => {
   return response.json();
 };
 
-// 🔹 Create account (with token from localStorage)
-const createAccount = async (accountData) => {
+// 🔹 Get all inscriptions
+const fetchInscriptions = async () => {
   const token = localStorage.getItem("token"); // Get the token from localStorage
   if (!token) {
     throw new Error("No token found. Please log in.");
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/admin_accounts/accounts/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: token, // Include the token in the headers
-    },
-    body: JSON.stringify(accountData),
-  });
-
-  return handleResponse(response);
-};
-
-// 🔹 Fetch all accounts (with token from localStorage)
-const fetchAccounts = async () => {
-  const token = localStorage.getItem("token"); // Get the token from localStorage
-  if (!token) {
-    throw new Error("No token found. Please log in.");
-  }
-
-  const response = await fetch(`${API_BASE_URL}/api/admin_accounts/accounts`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin_sp/etudiant_inscriptions`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -46,33 +27,52 @@ const fetchAccounts = async () => {
   return handleResponse(response);
 };
 
-// 🔹 Update account (with token from localStorage)
-const updateAccount = async (id, accountData) => {
+// 🔹 Create a new inscription
+const createInscription = async (inscriptionData) => {
   const token = localStorage.getItem("token"); // Get the token from localStorage
   if (!token) {
     throw new Error("No token found. Please log in.");
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/admin_accounts/accounts/${id}`, {
-    method: "PUT",
+  const response = await fetch(`${API_BASE_URL}/api/admin_sp/etudiant_inscriptions`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: token, // Include the token in the headers
     },
-    body: JSON.stringify(accountData),
+    body: JSON.stringify(inscriptionData),
   });
 
   return handleResponse(response);
 };
 
-// 🔹 Delete account (with token from localStorage)
-const deleteAccount = async (id) => {
+// 🔹 Update an existing inscription
+const updateInscription = async (id, inscriptionData) => {
   const token = localStorage.getItem("token"); // Get the token from localStorage
   if (!token) {
     throw new Error("No token found. Please log in.");
   }
 
-  const response = await fetch(`${API_BASE_URL}/api/admin_accounts/accounts/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/api/admin_sp/etudiant_inscriptions/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token, // Include the token in the headers
+    },
+    body: JSON.stringify(inscriptionData),
+  });
+
+  return handleResponse(response);
+};
+
+// 🔹 Delete an inscription
+const deleteInscription = async (id) => {
+  const token = localStorage.getItem("token"); // Get the token from localStorage
+  if (!token) {
+    throw new Error("No token found. Please log in.");
+  }
+
+  const response = await fetch(`${API_BASE_URL}/api/admin_sp/etudiant_inscriptions/${id}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -83,10 +83,9 @@ const deleteAccount = async (id) => {
   return handleResponse(response);
 };
 
-// Export all service functions
 export default {
-  createAccount,
-  fetchAccounts,
-  updateAccount,
-  deleteAccount,
+  fetchInscriptions,
+  createInscription,
+  updateInscription,
+  deleteInscription,
 };
